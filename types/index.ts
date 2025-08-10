@@ -1,6 +1,7 @@
 export interface List {
   id: string
   name: string
+  status: 'active' | 'deleted'
   created_at: string
 }
 

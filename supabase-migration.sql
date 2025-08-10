@@ -24,3 +24,10 @@ SELECT
   COUNT(CASE WHEN status = 'deleted' THEN 1 END) as deleted_tasks,
   COUNT(CASE WHEN status IS NULL THEN 1 END) as null_status_tasks
 FROM tasks;
+
+-- Add soft-delete support for lists
+ALTER TABLE lists ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'active';
+ALTER TABLE lists DROP CONSTRAINT IF EXISTS lists_status_check;
+ALTER TABLE lists ADD CONSTRAINT lists_status_check CHECK (status IN ('active','deleted'));
+UPDATE lists SET status = 'active' WHERE status IS NULL;
+CREATE INDEX IF NOT EXISTS idx_lists_status ON lists(status);

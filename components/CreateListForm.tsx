@@ -7,9 +7,10 @@ import { Database } from '../types'
 
 interface CreateListFormProps {
   variant?: 'inline' | 'default'
+  onCreated?: (list: { id: string; name: string; created_at: string; status?: 'active' | 'deleted' }) => void
 }
 
-export default function CreateListForm({ variant = 'default' }: CreateListFormProps) {
+export default function CreateListForm({ variant = 'default', onCreated }: CreateListFormProps) {
   const [isCreating, setIsCreating] = useState(false)
   const [newListName, setNewListName] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -36,10 +37,13 @@ export default function CreateListForm({ variant = 'default' }: CreateListFormPr
       setNewListName('')
       setIsCreating(false)
 
-      // Redirect to the new list
       if (data && data[0]) {
-        router.push(`/list/${data[0].id}`)
-        router.refresh() // Refresh the page to show new data
+        if (onCreated) {
+          onCreated(data[0] as any)
+        } else {
+          // fallback: navigate to the new list
+          router.push(`/list/${data[0].id}`)
+        }
       }
     } catch (error) {
       console.error('Error creating list:', error)

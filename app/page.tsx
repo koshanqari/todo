@@ -2,8 +2,7 @@ import { Suspense } from 'react'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { Database } from '../types'
-import CreateListForm from '../components/CreateListForm'
-import ListsDisplay from '../components/ListsDisplay'
+import HomeClient from '../components/HomeClient'
 
 export default async function HomePage() {
   const cookieStore = cookies()
@@ -60,13 +59,6 @@ export default async function HomePage() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header row: Create button inline with section title */}
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-medium text-keep-gray-900">Your Lists</h2>
-          <CreateListForm variant="inline" />
-        </div>
-
-        {/* Lists Display */}
         <Suspense fallback={
           <div className="text-center py-12">
             <div className="inline-flex items-center space-x-2 text-keep-gray-500">
@@ -75,7 +67,7 @@ export default async function HomePage() {
             </div>
           </div>
         }>
-          <ListsDisplay initialLists={lists || []} />
+          <HomeClient initialLists={lists || []} />
         </Suspense>
       </main>
 
